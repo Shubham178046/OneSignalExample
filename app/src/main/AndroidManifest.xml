@@ -23,7 +23,10 @@
             android:name=".Services"
             android:enabled="true"
             android:exported="false" />
-        <receiver android:name=".OneSignalReceiver">
+        <receiver android:name=".OneSignalReceiver"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            >
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>

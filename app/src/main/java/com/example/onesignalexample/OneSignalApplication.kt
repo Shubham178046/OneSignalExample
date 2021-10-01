@@ -2,6 +2,8 @@ package com.example.onesignalexample
 
 import android.app.Application
 import android.content.Context
+import android.media.MediaPlayer
+import android.os.PowerManager
 import com.onesignal.OneSignal
 
 class OneSignalApplication : Application() {
@@ -9,9 +11,13 @@ class OneSignalApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-        OneSignal.initWithContext(this);
+        OneSignal.setNotificationWillShowInForegroundHandler(
+            NotificationWillShowInForeground(
+                applicationContext
+            )
+        )
+        OneSignal.initWithContext(this)
         OneSignal.setAppId(ONESIGNAL_APP_ID);
 
     }
-
 }

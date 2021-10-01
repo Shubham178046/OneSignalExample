@@ -9,16 +9,16 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 class Services : Service(), MediaPlayer.OnCompletionListener {
-    private var wakeLock: PowerManager.WakeLock? = null
-    private var isServiceStarted = false
     private val ACTION_PLAY: String = "com.musicalarm.action.PLAY"
     private var mMediaPlayer: MediaPlayer? = null
     override fun onBind(p0: Intent?): IBinder? {
@@ -37,12 +37,9 @@ class Services : Service(), MediaPlayer.OnCompletionListener {
         mMediaPlayer!!.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK)
         when (action) {
             ACTION_PLAY -> {
-                val mHandler = Handler()
-                mHandler.post(object : Runnable {
-                    override fun run() {
-                        mMediaPlayer?.start()
-                    }
-                })
+                CoroutineScope(Dispatchers.Main).launch {
+                    mMediaPlayer?.start()
+                }
             }
         }
         return START_STICKY
